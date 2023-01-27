@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>React hooks</title>
+
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/blood.css" />
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h2>React hooks</h2>
+        </section>
+        <section class="slide-2">
+          <h2>Why hooks?</h2>
+          <ul class="fragment fade-out" data-fragment-index="4">
+            <li class="fragment fade-up" data-fragment-index="1">Using State for Functional Components</li>
+            <li class="fragment fade-up" data-fragment-index="2">Backward compatibility</li>
+            <li class="fragment fade-up" data-fragment-index="3">Ability to reuse code in components</li>
+          </ul>
+          <h4 class="fragment fade-up" data-fragment-index="4">We can't use hooks in classes!</h4>
+        </section>
+        <section>
+          <h2>What is hooks?</h2>
+          <div class="r-stack">
+            <p class="fragment fade-out" data-fragment-index="0">Hook is a special function that allows you to "hook" to React features</p>
+            <p class="fragment" data-fragment-index="0">Before using hooks them must be import from react</p>
+          </div>
+          <pre class="fragment" data-fragment-index="0"><code data-trim data-line-numbers="1">
+            import React, { useState } from 'react';
+              function Example() {
+                // ...
+              }</code></pre>
+        </section>
+        <section>
+          <section>
+            <h2>useState hook</h2>
+            <p>Adds the ability to use the state of functional components</p>
+          </section>
+          <section>
+            <h4>useState syntax</h4>
+            <pre><code data-trim><script type="text/template">
+              import React, { useState } from 'react';
+
+              const App = () => {
+                const [value, valueChange] = useState(0);
+               
+                return (
+                  <div>
+                    {value}
+                    <button onClick={() => valueChange(value + 1)}>
+                      Increase value by 1
+                    </button>
+                  </div>
+                );
+              };</script></code></pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>usecontext hook</h2>
+            <p>Used to pass data to a component, but unlike props, a context allows you to pass data from a parent component to a child, bypassing intermediate ones.</p>
+          </section>
+          <section>
+            <h4>usecontext syntax</h4>
+            <pre><code data-trim><script type="text/template">
+            import {createContext, useContext} from "react";
+
+            const MyContext = createContext("without provider");
+              
+            const External = () => {
+              return (
+                <MyContext.Provider value="Hello, i am External">
+                  <Intermediate />
+                </MyContext.Provider>
+              );
+            };
+            
+            const Intermediate = () => {
+              return <Internal />;
+            };
+            
+            const Internal = () => {
+              const context = useContext(MyContext);
+            
+              return `I am Internal component. 
+              I have got the message from External: "${context}"`;
+            };</script></code></pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h3>useEffect (useLayoutEffect) hooks</h3>
+            <p>Used to perform some operations at different stages of the component's life.</p>
+            <ul>
+              <li>useLayoutEffect: React doesn't start rendering the constructed DOM tree until useLayoutEffect has finished</li>
+              <li>useEffect : React immediately starts rendering the constructed DOM, without waiting for useEffect to run</li>
+            </ul>
+          </section>
+          <section>
+            <h4>useEffect syntax</h4>
+            <div class="r-stack">
+              <pre class="fragment fade-out" data-fragment-index="0"><code data-trim><script type="text/template">
+                const App = ({data}) => {
+                  useEffect(() => {
+                    console.log("componentDidMount");
+                  }, []);
+                 
+                  return null;
+                };</script></code></pre>
+              <pre class="fragment fade-in-out" data-fragment-index="0"><code data-trim><script type="text/template">
+                const App = ({data}) => {
+                  useEffect(() => {
+                    console.log("componentDidUpdate");
+                  }, [data]);
+                 
+                  return null;
+                };</script></code></pre>
+              <pre class="fragment" data-fragment-index="2"><code data-trim><script type="text/template">
+                const App = ({data}) => {
+                  useEffect(() => {
+                    return () => {
+                      console.log("componentWillUnmount");
+                    };
+                  }, []);
+                 
+                  return null;
+                };</script></code></pre>
+            </div>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>useref hook</h2>
+            <p>Used when you need to access some DOM object directly</p>
+          </section>
+          <section>
+            <h4>useref syntax</h4>
+            <pre><code data-trim><script type="text/template">
+              const App = () => {
+                const ref = useRef();
+               
+                useEffect(() => {
+                  console.log(ref.current);
+                }, []);
+               
+                return <div ref={ref} />;
+              };</script></code></pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>useMemo</h2>
+            <p>Hook allows you to avoid redundant calculations, which is a kind of caching</p>
+          </section>
+          <section>
+            <h4>useMemo syntax</h4>
+            <pre><code data-trim><script type="text/template">
+              const MyComponent = ({a, b}) => {
+                const sqrt = a * a;
+               
+                return (
+                  <div>
+                    <div>Square a: {sqrt}</div>
+                    <div>B: {b}</div>
+                  </div>
+                );
+              };</script></code></pre>
+            <pre><code data-trim><script type="text/template">
+              const MyComponent = ({a, b}) => {
+                const sqrt = useMemo(() => a * a, [a]);
+               
+                return (
+                  <div>
+                    <div>Square a: {sqrt}</div>
+                    <div>B: {b}</div>
+                  </div>
+                );
+              };</script></code></pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>useCallback</h2>
+            <p>Hook allows you to create a method once and update it only when one of the parameters changes</p>
+          </section>
+          <section>
+            <h4>useCallback syntax</h4>
+            <div class="r-stack">
+              <pre class="fragment fade-out" data-fragment-index="0"><code data-trim><script type="text/template">
+                const ControlPannel = memo(({changer}) => {
+                  return (
+                    <div>
+                      <button onClick={changer}>+</button>
+                    </div>
+                  );
+                });
+                 
+                const App = () => {
+                  const [value, valueChange] = useState(Math.random());
+                 
+                  const changer = () => valueChange(Math.random());
+                 
+                  return (
+                    <div>
+                      {value}
+                      <ControlPannel changer={changer} />
+                    </div>
+                  );
+                };</script></code></pre>
+              <pre class="fragment" data-fragment-index="0"><code data-trim><script type="text/template">
+                const ControlPannel = memo(({increment}) => {
+                  return (
+                    <div>
+                      <button onClick={increment}>+</button>
+                    </div>
+                  );
+                });
+                 
+                const App = () => {
+                  const [value, valueChange] = useState(Math.random());
+                 
+                  const increment = useCallback(() => 
+                                              valueChange(Math.random()), []);
+                 
+                  return (
+                    <div>
+                      {value}
+                      <ControlPannel increment={increment} />
+                    </div>
+                  );
+                };</script></code></pre>
+            </div>
+          </section>
+        </section>
+        <section>
+          <h2>And this not all</h2>
+          <ul>
+            <li>useReducer</li>
+            <li>useImperativeHandle</li>
+            <li>useDebugValue</li>
+            <li>useDeferredValue</li>
+            <li>useTransition</li>
+            <li>useId</li>
+            <li>useSyncExternalStore</li>
+            <li>useInsertionEffect</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Useful links</h2>
+          <p><a href="https://reactjs.org/docs/hooks-intro.html">React hooks docs</a></p>
+          <p><a href="https://www.w3schools.com/react/react_hooks.asp">About hooks at w3schools</a></p>
+          <p><a href="https://usehooks.com/">How to create custom hooks</a></p>
+          <p><a href="https://blog.logrocket.com/build-tic-tac-toe-game-react-hooks/">Learn hooks an example</a></p>
+        </section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
+</html>
