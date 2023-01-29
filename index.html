@@ -49,12 +49,12 @@
               import React, { useState } from 'react';
 
               const App = () => {
-                const [value, valueChange] = useState(0);
+                const [value, setValue] = useState(0);
                
                 return (
                   <div>
                     {value}
-                    <button onClick={() => valueChange(value + 1)}>
+                    <button onClick={() => setValue(value + 1)}>
                       Increase value by 1
                     </button>
                   </div>
@@ -162,24 +162,26 @@
           <section>
             <h4>useMemo syntax</h4>
             <pre><code data-trim><script type="text/template">
-              const MyComponent = ({a, b}) => {
-                const sqrt = a * a;
+              const MyComponent = ({valueA, valueB}) => {
+                const calc = //...some complicated calculations with valueA
                
                 return (
                   <div>
-                    <div>Square a: {sqrt}</div>
-                    <div>B: {b}</div>
+                    <div>A: {calc}</div>
+                    <div>B: {valueB}</div>
                   </div>
                 );
               };</script></code></pre>
             <pre><code data-trim><script type="text/template">
-              const MyComponent = ({a, b}) => {
-                const sqrt = useMemo(() => a * a, [a]);
+              const MyComponent = ({valueA, valueB}) => {
+                const sqrt = useMemo(() => {
+                    //...some complicated calculations with valueA
+                  }, [valueA]);
                
                 return (
                   <div>
-                    <div>Square a: {sqrt}</div>
-                    <div>B: {b}</div>
+                    <div>A: {calc}</div>
+                    <div>B: {valueB}</div>
                   </div>
                 );
               };</script></code></pre>
@@ -194,18 +196,18 @@
             <h4>useCallback syntax</h4>
             <div class="r-stack">
               <pre class="fragment fade-out" data-fragment-index="0"><code data-trim><script type="text/template">
-                const ControlPannel = memo(({changer}) => {
+                const ControlPannel = ({changer}) => {
                   return (
                     <div>
                       <button onClick={changer}>+</button>
                     </div>
                   );
-                });
+                };
                  
                 const App = () => {
-                  const [value, valueChange] = useState(Math.random());
+                  const [value, setValue] = useState(Math.random());
                  
-                  const changer = () => valueChange(Math.random());
+                  const changer = () => setValue(Math.random());
                  
                   return (
                     <div>
@@ -215,19 +217,19 @@
                   );
                 };</script></code></pre>
               <pre class="fragment" data-fragment-index="0"><code data-trim><script type="text/template">
-                const ControlPannel = memo(({increment}) => {
+                const ControlPannel = ({increment}) => {
                   return (
                     <div>
                       <button onClick={increment}>+</button>
                     </div>
                   );
-                });
+                };
                  
                 const App = () => {
-                  const [value, valueChange] = useState(Math.random());
+                  const [value, setValue] = useState(Math.random());
                  
                   const increment = useCallback(() => 
-                                              valueChange(Math.random()), []);
+                                            setValue(Math.random()), []);
                  
                   return (
                     <div>
